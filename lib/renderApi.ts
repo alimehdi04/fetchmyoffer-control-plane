@@ -94,14 +94,11 @@ export async function deployBrain(
 }
 
 // 4. Update Environment Variables (For the Webhook URL fix)
+// 4. Update Environment Variables (For the Webhook URL fix)
 export async function updateServiceEnvVars(apiKey: string, serviceId: string, envVars: Array<{key: string, value: string}>) {
-  // The PUT endpoint requires a nested "envVar" object for each variable
-  const formattedEnvVars = envVars.map(e => ({
-    envVar: { key: e.key, value: e.value }
-  }));
-
+  // Render's PUT endpoint wants the raw array of {key, value} objects!
   return fetchRender(`/services/${serviceId}/env-vars`, apiKey, {
     method: 'PUT',
-    body: JSON.stringify(formattedEnvVars)
+    body: JSON.stringify(envVars)
   });
 }
