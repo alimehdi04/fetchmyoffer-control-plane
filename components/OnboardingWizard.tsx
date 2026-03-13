@@ -126,7 +126,7 @@ export default function OnboardingWizard({ linkCode }: { linkCode: string }) {
                 />
                 <HintBox 
                   title="Finding your JDBC URL" 
-                  text="Go to Project Settings -> Database. Scroll to 'Connection String', check the 'Use connection pooling' box, click the 'JDBC' tab, and copy the string. Don't forget to replace [YOUR-PASSWORD] with your actual DB password!" 
+                  text="Go to Project Dashboard, click the 'Connection' button at Navbar. Switch to 'Connection String', check the 'Session Pooler'[IPV4 compatible] box in Method tab, choose the Type = 'JDBC', and copy the string. Don't forget to replace [YOUR-PASSWORD] with your actual DB password!" 
                   link="https://supabase.com/dashboard/projects" 
                   linkText="Go to Supabase Dashboard" 
                 />
@@ -140,7 +140,7 @@ export default function OnboardingWizard({ linkCode }: { linkCode: string }) {
                   type="password"
                 />
                 <p className="text-xs text-zinc-500 mt-2 px-1">
-                  Found in Project Settings -&gt; API -&gt; service_role secret.
+                  Found in Project Settings -&gt; Under Sidebar, API keys -&gt; select &apos;Legacy anon, service_role API keys&apos; tab -&gt; service_role secret.
                 </p>
               </div>
             </>
