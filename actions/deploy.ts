@@ -15,7 +15,7 @@ export async function triggerDeployment() {
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: { vault: true, telegramLink: true }
+    include: { vault: true, telegramLink: true, instance: true } // 🛑 Added instance: true
   });
 
   if (!user || !user.vault) throw new Error("Vault not found");
