@@ -93,12 +93,19 @@ export async function deployBrain(
   });
 }
 
-// 4. Update Environment Variables (For the Webhook URL fix)
+
 // 4. Update Environment Variables (For the Webhook URL fix)
 export async function updateServiceEnvVars(apiKey: string, serviceId: string, envVars: Array<{key: string, value: string}>) {
   // Render's PUT endpoint wants the raw array of {key, value} objects!
   return fetchRender(`/services/${serviceId}/env-vars`, apiKey, {
     method: 'PUT',
     body: JSON.stringify(envVars)
+  });
+}
+
+// 5. Force a fresh deployment (To apply injected Env Vars)
+export async function triggerServiceDeploy(apiKey: string, serviceId: string) {
+  return fetchRender(`/services/${serviceId}/deploys`, apiKey, {
+    method: 'POST'
   });
 }

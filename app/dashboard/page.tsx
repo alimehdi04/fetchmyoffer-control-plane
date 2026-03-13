@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import ForceHuntButton from '@/components/ForceHuntButton';
+import ResumeUpload from '@/components/ResumeUpload';
 
 const prisma = new PrismaClient();
 
@@ -91,6 +92,22 @@ export default async function DashboardPage() {
               ) : (
                 <p className="text-sm text-center text-zinc-500">
                   Controls will unlock once deployment finishes.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+          {/* AI Knowledge Base Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle>AI Knowledge Base</CardTitle>
+              <CardDescription>Upload your latest resume to calibrate your AI recruiter.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {instance.status === 'DEPLOYED' && instance.brainUrl ? (
+                <ResumeUpload />
+              ) : (
+                <p className="text-sm text-center text-zinc-500">
+                  Upload unlocks once deployment finishes.
                 </p>
               )}
             </CardContent>

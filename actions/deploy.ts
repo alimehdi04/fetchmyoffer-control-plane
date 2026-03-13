@@ -6,6 +6,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { decrypt } from '@/lib/encryption';
 import { getRenderOwnerId, deployScraper, deployBrain } from '@/lib/renderApi';
 import { updateServiceEnvVars } from '@/lib/renderApi'; // Add this to your imports at the top!
+import { triggerServiceDeploy } from '@/lib/renderApi'; // Add to imports
 
 const prisma = new PrismaClient();
 
@@ -104,8 +105,13 @@ export async function triggerDeployment() {
     });
     
     // Fire the PUT request we just wrote to update the variables
-    
     await updateServiceEnvVars(keys.renderApiKey, brainServiceId, brainEnvVars);
+
+    // NEW: Force the Brain to restart so it picks up the Webhook URL!
+    
+    await triggerServiceDeploy(keys.renderApiKey, brainServiceId);
+
+
 
     // 7. Update Database with the live URLs
     await prisma.instance.update({
