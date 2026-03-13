@@ -20,6 +20,10 @@ export async function triggerDeployment() {
 
   if (!user || !user.vault) throw new Error("Vault not found");
 
+  if (user.instance && user.instance.status === 'DEPLOYED') {
+    throw new Error("You already have an active deployment! Please manage it from your Dashboard.");
+  }
+
   // 1. Decrypt the keys!
   const decryptedString = decrypt(
     user.vault.encryptedData,

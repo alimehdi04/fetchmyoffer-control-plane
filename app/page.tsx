@@ -1,65 +1,52 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Bot, ShieldCheck, Zap } from 'lucide-react';
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center p-6 text-center">
+      <div className="absolute top-0 w-full h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-200 via-zinc-50 to-zinc-50 dark:from-zinc-800 dark:via-zinc-950 dark:to-zinc-950 -z-10" />
+      
+      <div className="max-w-3xl space-y-8 z-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sm font-medium text-zinc-600 dark:text-zinc-300 mb-4">
+          <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
+          FetchMyOffer v1.0 is Live
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+          Your Autonomous <span className="text-blue-600 dark:text-blue-500">AI Recruiter.</span>
+        </h1>
+        
+        <p className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+          Deploy your own private server that hunts for jobs on auto-pilot. Zero monthly fees. 100% your infrastructure. Alerts delivered straight to your Telegram.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <Link href="/onboarding">
+            <Button size="lg" className="w-full sm:w-auto gap-2 text-md px-8 py-6">
+              Get Started <ArrowRight className="w-5 h-5" />
+            </Button>
+          </Link>
         </div>
-      </main>
-    </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-16 border-t border-zinc-200 dark:border-zinc-800 mt-16 text-left">
+          <div className="space-y-2">
+            <Bot className="w-8 h-8 text-blue-500" />
+            <h3 className="font-bold">Automated Hunting</h3>
+            <p className="text-sm text-zinc-500">Scrapes top job boards while you sleep and analyzes matches with AI.</p>
+          </div>
+          <div className="space-y-2">
+            <ShieldCheck className="w-8 h-8 text-green-500" />
+            <h3 className="font-bold">Military-Grade Vault</h3>
+            <p className="text-sm text-zinc-500">Your API keys are AES-256 encrypted. We never see your raw data.</p>
+          </div>
+          <div className="space-y-2">
+            <Zap className="w-8 h-8 text-yellow-500" />
+            <h3 className="font-bold">Zero Platform Fees</h3>
+            <p className="text-sm text-zinc-500">Built on a Bring-Your-Own-Key model. Pay nothing to use the platform.</p>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
