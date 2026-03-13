@@ -1,0 +1,107 @@
+// src/lib/renderApi.ts
+
+// Helper to make API calls to Render
+async function fetchRender(endpoint: string, apiKey: string, options: RequestInit = {}) {
+  const response = await fetch(`https://api.render.com/v1${endpoint}`, {
+    ...options,
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    // Safely parse the error whether it is JSON or plain HTML/Text
+    const errorText = await response.text();
+    let errorMessage = errorText;
+    try {
+      const errorJson = JSON.parse(errorText);
+      errorMessage = JSON.stringify(errorJson);
+    } catch (e) {
+      // It was plain text, keep it as is
+    }
+    throw new Error(`Render API Error (${response.status}): ${errorMessage}`);
+  }
+  
+  return response.json();
+}
+
+// 1. Get the user's Render Owner ID
+export async function getRenderOwnerId(apiKey: string) {
+  // Hit the /owners endpoint, which returns an array of accounts/teams you own
+  const data = await fetchRender('/owners', apiKey);
+  
+  if (Array.isArray(data) && data.length > 0) {
+    return data[0].owner.id; // Usually starts with 'usr-' or 'tea-'
+  }
+  
+  throw new Error("No Render owner found for this API key.");
+}
+
+// 2. Deploy the Python Scraper
+// 2. Deploy the Python Scraper
+// 2. Deploy the Python Scraper (Using Docker!)
+// 2. Deploy the Python Scraper (Using Docker!)
+export async function deployScraper(apiKey: string, ownerId: string, userId: string) {
+  const payload = {
+    type: "web_service",
+    name: `fmo-scraper-${userId.substring(0, 6)}`,
+    ownerId: ownerId,
+    repo: "https://github.com/alimehdi04/scraperPython_fetchMyOffer", // 🛑 UPDATE THIS!
+    autoDeploy: "yes",
+    branch: "main",
+    serviceDetails: {
+      env: "docker", // 🛑 Changed to docker!
+      plan: "free",
+      region: "oregon"
+    }
+  };
+
+  return fetchRender('/services', apiKey, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+}
+
+// 3. Deploy the Spring Boot Brain
+export async function deployBrain(
+  apiKey: string, 
+  ownerId: string, 
+  userId: string,
+  envVars: Array<{key: string, value: string}>
+) {
+  const payload = {
+    type: "web_service",
+    name: `fmo-brain-${userId.substring(0, 6)}`,
+    ownerId: ownerId,
+    repo: "https://github.com/alimehdi04/fetchMyOffer", // 🛑 UPDATE THIS
+    autoDeploy: "yes",
+    branch: "main",
+    envVars: envVars,
+    serviceDetails: {
+      env: "docker", // Assuming your Spring Boot uses a Dockerfile
+      plan: "free",
+      region: "oregon"
+    }
+  };
+
+  return fetchRender('/services', apiKey, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+}
+
+// 4. Update Environment Variables (For the Webhook URL fix)
+export async function updateServiceEnvVars(apiKey: string, serviceId: string, envVars: Array<{key: string, value: string}>) {
+  // The PUT endpoint requires a nested "envVar" object for each variable
+  const formattedEnvVars = envVars.map(e => ({
+    envVar: { key: e.key, value: e.value }
+  }));
+
+  return fetchRender(`/services/${serviceId}/env-vars`, apiKey, {
+    method: 'PUT',
+    body: JSON.stringify(formattedEnvVars)
+  });
+}
