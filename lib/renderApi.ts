@@ -1,6 +1,6 @@
 // src/lib/renderApi.ts
 
-// Helper to make API calls to Render
+// Helper to make API calls to Render securely
 async function fetchRender(endpoint: string, apiKey: string, options: RequestInit = {}) {
   const response = await fetch(`https://api.render.com/v1${endpoint}`, {
     ...options,
@@ -12,12 +12,13 @@ async function fetchRender(endpoint: string, apiKey: string, options: RequestIni
     },
   });
 
+  // Extract the raw text first instead of calling .json() blindly
+  const text = await response.text();
+
   if (!response.ok) {
-    // Safely parse the error whether it is JSON or plain HTML/Text
-    const errorText = await response.text();
-    let errorMessage = errorText;
+    let errorMessage = text;
     try {
-      const errorJson = JSON.parse(errorText);
+      const errorJson = JSON.parse(text);
       errorMessage = JSON.stringify(errorJson);
     } catch (e) {
       // It was plain text, keep it as is
@@ -25,7 +26,12 @@ async function fetchRender(endpoint: string, apiKey: string, options: RequestIni
     throw new Error(`Render API Error (${response.status}): ${errorMessage}`);
   }
   
-  return response.json();
+  // Safe JSON parsing: If Render returns an empty body (like on a redeploy), return an empty object
+  if (!text || text.trim() === "") {
+    return {};
+  }
+
+  return JSON.parse(text);
 }
 
 // 1. Get the user's Render Owner ID
@@ -40,9 +46,6 @@ export async function getRenderOwnerId(apiKey: string) {
   throw new Error("No Render owner found for this API key.");
 }
 
-// 2. Deploy the Python Scraper
-// 2. Deploy the Python Scraper
-// 2. Deploy the Python Scraper (Using Docker!)
 // 2. Deploy the Python Scraper (Using Docker!)
 export async function deployScraper(apiKey: string, ownerId: string, userId: string) {
   const payload = {
@@ -92,7 +95,6 @@ export async function deployBrain(
     body: JSON.stringify(payload)
   });
 }
-
 
 // 4. Update Environment Variables (For the Webhook URL fix)
 export async function updateServiceEnvVars(apiKey: string, serviceId: string, envVars: Array<{key: string, value: string}>) {
