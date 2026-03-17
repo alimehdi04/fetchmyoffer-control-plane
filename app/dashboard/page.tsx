@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import ForceHuntButton from '@/components/ForceHuntButton';
 import ResumeUpload from '@/components/ResumeUpload';
-import { Clock } from 'lucide-react'; // 🛑 Added Clock icon
+import TeardownButton from '@/components/TeardownButton';
+import InfoBanner from '@/components/InfoBanner';
+import ServerStatus from '@/components/ServerStatus'; // 🛑 Imported the new ServerStatus component
 
 const prisma = new PrismaClient();
 
@@ -41,16 +43,8 @@ export default async function DashboardPage() {
           <p className="text-zinc-500">Manage your autonomous AI recruiter.</p>
         </div>
 
-        {/* 🛑 BEAUTIFIED INFO BANNER */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-start gap-3 text-blue-800 dark:text-blue-300 shadow-sm">
-          <Clock className="w-5 h-5 mt-0.5 flex-shrink-0" />
-          <div>
-            <h4 className="font-semibold text-sm">Initial Deployment Notice</h4>
-            <p className="text-sm opacity-90 mt-1">
-              Because we provision brand new cloud infrastructure specifically for you, your first deployment will take approximately <strong>15-20 minutes</strong> to build and start on Render. Do check both servers are alive above performing any operation.
-            </p>
-          </div>
-        </div>
+        {/* Smart Dismissible Banner */}
+        <InfoBanner />
 
         {/* Grid Layout for Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -62,7 +56,14 @@ export default async function DashboardPage() {
               <CardDescription>Your personal infrastructure</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between items-center border-b pb-2 dark:border-zinc-800">
+              
+              {/* Soft warning moved here */}
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-300 text-xs p-2.5 rounded-md flex items-start gap-2">
+                <span className="text-base leading-none">⚠️</span>
+                <span>Do check both servers are awake before performing any operation.</span>
+              </div>
+
+              <div className="flex justify-between items-center border-b pb-4 dark:border-zinc-800">
                 <span className="font-medium">Deployment</span>
                 <span className={`px-2 py-1 rounded text-xs font-bold ${
                   instance.status === 'DEPLOYED' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 
@@ -73,19 +74,15 @@ export default async function DashboardPage() {
                 </span>
               </div>
               
-              <div className="space-y-1">
-                <p className="text-sm font-medium">Brain Server (Java):</p>
-                <a href={`${instance.brainUrl}/api/v1/public/health-check`} target="_blank" className="text-xs text-blue-500 hover:underline break-all">
-                  {instance.brainUrl || 'Provisioning...'}
-                </a>
-              </div>
+              {/* 🛑 Replaced static links with dynamic ServerStatus component */}
+              {instance.brainUrl && instance.scraperUrl ? (
+                <ServerStatus brainUrl={instance.brainUrl} scraperUrl={instance.scraperUrl} />
+              ) : (
+                <p className="text-sm text-zinc-500 text-center py-2 animate-pulse">
+                  Provisioning servers...
+                </p>
+              )}
 
-              <div className="space-y-1">
-                <p className="text-sm font-medium">Scraper Server (Python):</p>
-                <a href={`${instance.scraperUrl}/health`} target="_blank" className="text-xs text-blue-500 hover:underline break-all">
-                  {instance.scraperUrl || 'Provisioning...'}
-                </a>
-              </div>
             </CardContent>
           </Card>
 
@@ -103,7 +100,10 @@ export default async function DashboardPage() {
               </div>
 
               {instance.status === 'DEPLOYED' && instance.brainUrl ? (
-                <ForceHuntButton brainUrl={instance.brainUrl} />
+                <>
+                  <ForceHuntButton brainUrl={instance.brainUrl} />
+                  <TeardownButton />
+                </>
               ) : (
                 <p className="text-sm text-center text-zinc-500">
                   Controls will unlock once deployment finishes.

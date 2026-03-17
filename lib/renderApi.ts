@@ -111,3 +111,33 @@ export async function triggerServiceDeploy(apiKey: string, serviceId: string) {
     method: 'POST'
   });
 }
+
+// 6. Delete user infrastructure (Teardown)
+export async function deleteUserServices(apiKey: string, userId: string) {
+  // 1. Fetch all services on their Render account
+  const servicesResponse = await fetchRender('/services?limit=100', apiKey);
+  
+  const targetScraperName = `fmo-scraper-${userId.substring(0, 6)}`;
+  const targetBrainName = `fmo-brain-${userId.substring(0, 6)}`;
+
+  // 2. Filter out only the ones created by FetchMyOffer
+  const servicesToDelete = servicesResponse.filter((s: any) => 
+    s.service.name === targetScraperName || s.service.name === targetBrainName
+  );
+
+  // 3. Fire the DELETE requests
+  const deletePromises = servicesToDelete.map(async (s: any) => {
+    const res = await fetch(`https://api.render.com/v1/services/${s.service.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Accept': 'application/json'
+      }
+    });
+    if (!res.ok) {
+      console.error(`Failed to delete ${s.service.name} from Render.`);
+    }
+  });
+
+  await Promise.allSettled(deletePromises);
+}
