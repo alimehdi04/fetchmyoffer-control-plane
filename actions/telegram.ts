@@ -3,7 +3,7 @@
 import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // Adjust path if needed
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'; 
 
 const prisma = new PrismaClient();
 
@@ -27,7 +27,7 @@ export async function generateTelegramLink() {
 
   // If not, generate a random 6-character code and save it
   if (!linkRecord) {
-    const code = crypto.randomBytes(3).toString('hex'); // e.g., "a1b2c3"
+    const code = crypto.randomBytes(3).toString('hex'); 
     
     linkRecord = await prisma.telegramLink.create({
       data: {

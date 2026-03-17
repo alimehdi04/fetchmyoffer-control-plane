@@ -7,7 +7,7 @@ import ForceHuntButton from '@/components/ForceHuntButton';
 import ResumeUpload from '@/components/ResumeUpload';
 import TeardownButton from '@/components/TeardownButton';
 import InfoBanner from '@/components/InfoBanner';
-import ServerStatus from '@/components/ServerStatus'; // 🛑 Imported the new ServerStatus component
+import ServerStatus from '@/components/ServerStatus'; 
 
 const prisma = new PrismaClient();
 
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
                 </span>
               </div>
               
-              {/* 🛑 Replaced static links with dynamic ServerStatus component */}
+              {/* dynamic ServerStatus component */}
               {instance.brainUrl && instance.scraperUrl ? (
                 <ServerStatus brainUrl={instance.brainUrl} scraperUrl={instance.scraperUrl} />
               ) : (

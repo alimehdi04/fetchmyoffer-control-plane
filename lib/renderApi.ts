@@ -1,6 +1,3 @@
-// src/lib/renderApi.ts
-
-// Helper to make API calls to Render securely
 async function fetchRender(endpoint: string, apiKey: string, options: RequestInit = {}) {
   const response = await fetch(`https://api.render.com/v1${endpoint}`, {
     ...options,
@@ -52,11 +49,11 @@ export async function deployScraper(apiKey: string, ownerId: string, userId: str
     type: "web_service",
     name: `fmo-scraper-${userId.substring(0, 6)}`,
     ownerId: ownerId,
-    repo: "https://github.com/alimehdi04/scraperPython_fetchMyOffer", // 🛑 UPDATE THIS!
+    repo: "https://github.com/alimehdi04/scraperPython_fetchMyOffer", 
     autoDeploy: "yes",
     branch: "main",
     serviceDetails: {
-      env: "docker", // 🛑 Changed to docker!
+      env: "docker", 
       plan: "free",
       region: "oregon"
     }
@@ -79,12 +76,12 @@ export async function deployBrain(
     type: "web_service",
     name: `fmo-brain-${userId.substring(0, 6)}`,
     ownerId: ownerId,
-    repo: "https://github.com/alimehdi04/fetchMyOffer", // 🛑 UPDATE THIS
+    repo: "https://github.com/alimehdi04/fetchMyOffer", 
     autoDeploy: "yes",
     branch: "main",
     envVars: envVars,
     serviceDetails: {
-      env: "docker", // Assuming your Spring Boot uses a Dockerfile
+      env: "docker", 
       plan: "free",
       region: "oregon"
     }
@@ -96,7 +93,7 @@ export async function deployBrain(
   });
 }
 
-// 4. Update Environment Variables (For the Webhook URL fix)
+// 4. Update Environment Variables (For the Webhook URL)
 export async function updateServiceEnvVars(apiKey: string, serviceId: string, envVars: Array<{key: string, value: string}>) {
   // Render's PUT endpoint wants the raw array of {key, value} objects!
   return fetchRender(`/services/${serviceId}/env-vars`, apiKey, {

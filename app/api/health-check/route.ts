@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   // Ping both servers concurrently so it never takes longer than 3 seconds total
   const [brainStatus, scraperStatus] = await Promise.all([
     ping(`${brainUrl}/api/v1/public/health-check`),
-    ping(`${scraperUrl}/health`) // Ensure this matches your Python scraper's actual health endpoint!
+    ping(`${scraperUrl}/health`) 
   ]);
 
   return NextResponse.json({ brain: brainStatus, scraper: scraperStatus });

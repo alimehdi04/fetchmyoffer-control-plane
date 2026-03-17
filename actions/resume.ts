@@ -29,11 +29,9 @@ export async function uploadResumeToBrain(formData: FormData) {
 
     // Prepare the form data exactly how Spring Boot expects it
     const uploadData = new FormData();
-    // 🛑 IMPORTANT: Change 'file' below if your Spring Boot @RequestParam is named differently!
-    // e.g., if you use @RequestParam("resume"), change 'file' to 'resume'
+    
     uploadData.append('file', file); 
-
-    // 🛑 IMPORTANT: Update this URL if your Spring Boot endpoint path is different
+  
     const targetEndpoint = `${user.instance.brainUrl}/api/v1/profile/upload-resume`;
 
     const response = await fetch(targetEndpoint, {

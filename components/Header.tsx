@@ -10,7 +10,7 @@ export default function Header({ session }: { session: any }) {
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md">
       <div className="container mx-auto max-w-5xl flex h-16 items-center justify-between px-4">
         
-        {/* Brand Logo - Always goes to Landing Page */}
+        {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight text-zinc-900 dark:text-white">
           <Bot className="w-6 h-6 text-blue-600" />
           <span>FetchMyOffer</span>

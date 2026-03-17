@@ -4,7 +4,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route' // Adjust this path if your authOptions is stored elsewhere
+import { authOptions } from '@/app/api/auth/[...nextauth]/route' 
 
 const inter = Inter({ subsets: ['latin'] })
 

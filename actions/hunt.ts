@@ -3,7 +3,7 @@
 export async function triggerRemoteHunt(brainUrl: string) {
   try {
     const response = await fetch(`${brainUrl}/api/v1/profile/force-hunt`, {
-      method: 'GET', // 🛑 Change this from 'POST' to 'GET'
+      method: 'GET', 
       headers: {
         'Content-Type': 'application/json',
       },
